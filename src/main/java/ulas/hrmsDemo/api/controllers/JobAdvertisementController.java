@@ -28,6 +28,8 @@ public class JobAdvertisementController {
         return this.jobAdvertisementService.getAll();
     }
 
+    @GetMapping("getByJobAdvertisementId")
+    public DataResult<JobAdvertisement> getByJobAdvertisementId(@RequestParam int id){return this.jobAdvertisementService.getByJobAdvertisementId(id);}
 
     @GetMapping("getJobs")
     public DataResult<List<JobAdvertisement>> getJobs() {

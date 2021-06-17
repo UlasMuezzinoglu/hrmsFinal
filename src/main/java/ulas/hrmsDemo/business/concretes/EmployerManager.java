@@ -1,18 +1,21 @@
 package ulas.hrmsDemo.business.concretes;
 
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ulas.hrmsDemo.business.abstracts.EmailService;
 import ulas.hrmsDemo.business.abstracts.EmployerService;
 import ulas.hrmsDemo.business.abstracts.VerifyCodeService;
-import ulas.hrmsDemo.business.checkHelper.concretes.EmployeeCheckHelper;
-import ulas.hrmsDemo.business.checkHelper.concretes.EmployerCheckHelper;
+import ulas.hrmsDemo.core.utilities.cloudinary.CloudinaryService;
 import ulas.hrmsDemo.core.utilities.results.*;
 import ulas.hrmsDemo.dataAccess.abstracts.EmployerDao;
 import ulas.hrmsDemo.dataAccess.abstracts.UserDao;
+import ulas.hrmsDemo.entities.concretes.CurriculumViate;
 import ulas.hrmsDemo.entities.concretes.Employer;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EmployerManager implements EmployerService {
@@ -21,13 +24,15 @@ public class EmployerManager implements EmployerService {
     private EmailService emailService;
     private VerifyCodeService verifyCodeService;
     private UserDao userDao;
+    private CloudinaryService cloudinaryService;
 
     @Autowired
-    public EmployerManager(EmployerDao employerDao, EmailService emailService, VerifyCodeService verifyCodeService, UserDao userDao) {
+    public EmployerManager(EmployerDao employerDao, EmailService emailService, VerifyCodeService verifyCodeService, UserDao userDao, CloudinaryService cloudinaryService) {
         this.employerDao = employerDao;
         this.emailService = emailService;
         this.verifyCodeService = verifyCodeService;
         this.userDao = userDao;
+        this.cloudinaryService = cloudinaryService;
     }
 
 
@@ -54,24 +59,11 @@ public class EmployerManager implements EmployerService {
             flag = true;
         }
         if (flag){
-            return new ErrorResult(errorMsg);
+            return new ErrorResult(errorMsg, HttpStatus.SC_BAD_REQUEST);
         }
         this.employerDao.save(employer);
         this.verifyCodeService.createVerifyCode(employer);
         return new SuccessResult(this.emailService.sendEmail(employer).getMessage());
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         /*boolean checkFields = !EmployerCheckHelper.allFieldReq(employer);
@@ -84,6 +76,21 @@ public class EmployerManager implements EmployerService {
         this.verifyCodeService.createVerifyCode(userDao.getOne(employer.getId()));
         this.emailService.sendEmail(employer);
         return new SuccessResult(this.emailService.sendEmail(employer).getMessage());*/
+    }
+
+    @Override
+    public Result saveImage(MultipartFile file, int empId) {
+        try {
+            Map<String, String> uploader = (Map<String, String>) cloudinaryService.save(file).getData();
+            String imageUrl= uploader.get("url");
+            Employer employer = employerDao.getOne(empId);
+            employer.setPhoto(imageUrl);
+            employerDao.save(employer);
+        }catch (Exception e){
+            return new ErrorResult("Geçersiz Medya Türü !");
+        }
+
+        return new SuccessResult("Fotoğraf Ekleme Başarılı");
     }
 
 

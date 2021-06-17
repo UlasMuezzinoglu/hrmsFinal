@@ -43,6 +43,11 @@ public class JobAdvertisementManager implements JobAdvertisementService {
     }
 
     @Override
+    public DataResult<JobAdvertisement> getByJobAdvertisementId(int jobAdvertisementId) {
+        return new SuccessDataResult<JobAdvertisement>(this.jobAdvertisementDao.findAllByIdAndStatusTrue(jobAdvertisementId),"Id ye Göre Başarıyla Getirildi.");
+    }
+
+    @Override
     public DataResult<List<JobAdvertisement>> findAllByEmployer_IdAndStatusTrue(int employerId) {
         return new SuccessDataResult<List<JobAdvertisement>>(this.jobAdvertisementDao.findAllByEmployer_IdAndStatusTrue(employerId));
     }

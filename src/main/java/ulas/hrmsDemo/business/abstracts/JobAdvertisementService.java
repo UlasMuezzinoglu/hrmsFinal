@@ -17,6 +17,8 @@ public interface JobAdvertisementService {
 
     DataResult<List<JobAdvertisement>> getAllStatusTrue();
 
+    DataResult<JobAdvertisement> getByJobAdvertisementId(int jobAdvertisementId);
+
     DataResult<List<JobAdvertisement>> findAllByEmployer_IdAndStatusTrue(int employerId);
 
     Result saveImage(MultipartFile file, int jobAdvertisementId);

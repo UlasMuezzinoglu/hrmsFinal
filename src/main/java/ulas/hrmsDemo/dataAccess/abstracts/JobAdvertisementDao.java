@@ -9,6 +9,9 @@ import ulas.hrmsDemo.entities.dtos.JobAdvertisementDto;
 import java.util.List;
 
 public interface JobAdvertisementDao extends JpaRepository<JobAdvertisement, Integer> {
+
+    JobAdvertisement findAllByIdAndStatusTrue(int id);
+
     List<JobAdvertisement> findAllByStatusTrue();
 
     List<JobAdvertisement> findAllByEmployer_IdAndStatusTrue(int employerId);
@@ -16,6 +19,8 @@ public interface JobAdvertisementDao extends JpaRepository<JobAdvertisement, Int
     List<JobAdvertisement> findAllByStatusTrueOrderByPublishDateAsc();
 
     List<JobAdvertisement> findAllByStatusTrueOrderByPublishDateDesc();
+
+
 
 
     @Query("Select new ulas.hrmsDemo.entities.dtos.JobAdvertisementDto"

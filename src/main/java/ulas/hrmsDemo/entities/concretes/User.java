@@ -45,4 +45,8 @@ public class User {
     private boolean isVerified;
 
 
+    @Column(name="photo")
+    private String photo;
+
+
 }
