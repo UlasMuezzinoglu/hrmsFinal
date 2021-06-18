@@ -1,11 +1,14 @@
 package ulas.hrmsDemo.api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ulas.hrmsDemo.business.abstracts.CurriculumViateService;
 import ulas.hrmsDemo.core.utilities.results.DataResult;
 import ulas.hrmsDemo.core.utilities.results.Result;
+import ulas.hrmsDemo.entities.concretes.City;
 import ulas.hrmsDemo.entities.concretes.CurriculumViate;
 
 import javax.validation.Valid;
@@ -26,16 +29,25 @@ public class CurriculumVitaeController {
 
 
     @GetMapping("/getall")
-    public DataResult<List<CurriculumViate>> getAll(){
+    public ResponseEntity<DataResult<List<CurriculumViate>>> getAll(){
 
-        return this.curriculumViateService.getAll();
+        var result = this.curriculumViateService.getAll();
+        if (result.getData().size() == 0){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        }
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/add")
-    public Result add(@Valid @RequestBody CurriculumViate curriculumViate){
+    public ResponseEntity<Result> add(@Valid @RequestBody CurriculumViate curriculumViate){
         //this.employerService.register(employer);
         //return new SuccessResult(employer.getEmail());
-        return this.curriculumViateService.add(curriculumViate);
+        var result = this.curriculumViateService.add(curriculumViate);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
     }
 
     @PutMapping("/uploadImage")
@@ -43,9 +55,13 @@ public class CurriculumVitaeController {
         return this.curriculumViateService.saveImage(file, cvId);
     }
 
-    @GetMapping("/getById")
-    public DataResult<List<CurriculumViate>> getbyId(@RequestParam int id){
-        return this.curriculumViateService.getByCandidateId(id);
+    @GetMapping("/getByCandidateId")
+    public ResponseEntity<DataResult<List<CurriculumViate>>> getbyId(@RequestParam int candidateId){
+        var result = this.curriculumViateService.getByCandidateId(candidateId);
+        if (result.getData().size() == 0){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        }
+        return ResponseEntity.ok(result);
     }
 
 

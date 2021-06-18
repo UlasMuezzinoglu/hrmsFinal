@@ -3,22 +3,19 @@ package ulas.hrmsDemo.api.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import org.springframework.stereotype.Component;
-
 import org.springframework.web.bind.annotation.*;
 import ulas.hrmsDemo.business.abstracts.CandicateService;
-import ulas.hrmsDemo.business.abstracts.JobTitleService;
 import ulas.hrmsDemo.core.utilities.results.DataResult;
 
 import ulas.hrmsDemo.core.utilities.results.ErrorDataResult;
 
 import ulas.hrmsDemo.core.utilities.results.Result;
 import ulas.hrmsDemo.entities.concretes.Candicate;
-import ulas.hrmsDemo.entities.concretes.JobTitle;
+import ulas.hrmsDemo.entities.concretes.Employer;
 
 
 import javax.validation.Valid;
@@ -26,12 +23,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/Candicates/")
-
+@CrossOrigin
 public class CandicatesController {
 
     private CandicateService candicateService;
@@ -43,15 +38,24 @@ public class CandicatesController {
     }
 
     @GetMapping("/getall")
-    public DataResult<List<Candicate>> getAll() {
+    public ResponseEntity<DataResult<List<Candicate>>>  getAll(){
 
-        return this.candicateService.getAll();
+        var result = this.candicateService.getAll();
+        if (result.getData().size() == 0){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        }
+        return ResponseEntity.ok(result);
     }
     @PostMapping("/add")
 
-    public Result add(@Valid @RequestBody Candicate candicate){
+    public ResponseEntity<Result> add(@Valid @RequestBody Candicate candicate){
 
-        return this.candicateService.register(candicate);
+        var result = this.candicateService.register(candicate);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

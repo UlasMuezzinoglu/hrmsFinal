@@ -1,5 +1,6 @@
 package ulas.hrmsDemo.business.concretes;
 
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ulas.hrmsDemo.business.abstracts.CandicateService;
@@ -79,7 +80,7 @@ public class CandicateManager implements CandicateService {
             flag = true;
         }
         if (flag){
-            return new ErrorResult(errorMsg);
+            return new ErrorResult(errorMsg, HttpStatus.SC_BAD_REQUEST);
         }
         this.candicateDao.save(candicate);
         this.verifyCodeService.createVerifyCode(candicate);
