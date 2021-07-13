@@ -13,5 +13,7 @@ public interface SchoolGradeService {
 
     Result add(SchoolGrade schoolGrade);
 
+    Result addMultiple(SchoolGrade[] schoolGrades);
+
 
 }

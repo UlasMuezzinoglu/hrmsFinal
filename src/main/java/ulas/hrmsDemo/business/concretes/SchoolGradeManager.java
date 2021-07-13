@@ -35,4 +35,12 @@ public class SchoolGradeManager implements SchoolGradeService {
         this.schoolGradeDao.save(schoolGrade);
         return new SuccessResult("Başarı ile Eklendi");
     }
+
+    @Override
+    public Result addMultiple(SchoolGrade[] schoolGrades) {
+        for (SchoolGrade schoolGrade : schoolGrades){
+            this.schoolGradeDao.save(schoolGrade);
+        }
+        return new SuccessResult("Başarı ile eklendiler");
+    }
 }

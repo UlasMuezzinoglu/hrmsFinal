@@ -1,5 +1,6 @@
 package ulas.hrmsDemo.entities.concretes;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -47,6 +49,11 @@ public class JobAdvertisement {
     @Temporal(TemporalType.DATE)
     private Date publishDate;
 
+    @Column(name = "full_description")
+    private String fullDescription;
+
+
+
     @ManyToOne()
     @JoinColumn(name = "city_id")
     private City city;
@@ -65,6 +72,11 @@ public class JobAdvertisement {
     private WorkShift workShift;
 
 
+    @ManyToOne()
+    @JoinColumn(name = "experience_id")
+    private Experience experience;
 
-
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @OneToMany(mappedBy = "jobAdvertisement")
+    private List<SchoolGrade> schoolGrades;
 }

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface SchoolGradeDao extends JpaRepository<SchoolGrade,Integer> {
     List<SchoolGrade> findAll();
+
+
 }

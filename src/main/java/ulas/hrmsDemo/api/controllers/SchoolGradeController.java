@@ -34,4 +34,9 @@ public class SchoolGradeController {
         return this.schoolGradeService.add(schoolGrade);
 
     }
+
+    @PostMapping("/addMultiple")
+    public Result addMultiple(@RequestBody SchoolGrade[] schoolGrades){
+        return this.schoolGradeService.addMultiple(schoolGrades);
+    }
 }
