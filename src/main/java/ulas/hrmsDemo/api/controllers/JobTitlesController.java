@@ -1,6 +1,8 @@
 package ulas.hrmsDemo.api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ulas.hrmsDemo.business.abstracts.JobTitleService;
 import ulas.hrmsDemo.core.utilities.results.DataResult;
@@ -25,14 +27,23 @@ public class JobTitlesController {
     }
 
     @GetMapping("/getall")
-    public DataResult<List<JobTitle>> getAll() {
-        return this.jobTitleService.getAll();
+    public ResponseEntity<DataResult<List<JobTitle>>> getAll() {
+        var result= this.jobTitleService.getAll();
+        if (result.getData().size() == 0){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        }
+        return ResponseEntity.ok(result);
     }
 
 
     @PostMapping("/add")
-    public Result add(@RequestBody JobTitle jobTitle){
-        return this.jobTitleService.add(jobTitle);
+    public ResponseEntity<Result> add(@RequestBody JobTitle jobTitle){
+        var result = this.jobTitleService.add(jobTitle);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
     }
 
 

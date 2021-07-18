@@ -1,6 +1,8 @@
 package ulas.hrmsDemo.api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ulas.hrmsDemo.business.abstracts.TalentService;
 import ulas.hrmsDemo.core.utilities.results.DataResult;
@@ -21,13 +23,22 @@ public class TalentController {
         this.talentService = talentService;
     }
     @GetMapping("/getall")
-    public DataResult<List<Talent>> getAll(){
-        return this.talentService.getAll();
+    public ResponseEntity<DataResult<List<Talent>>> getAll(){
+        var result = this.talentService.getAll();
+        if (result.getData().size() == 0){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        }
+        return ResponseEntity.ok(result);
     }
 
 
     @PostMapping("/add")
-    public Result add(@Valid @RequestBody Talent talent) {
-        return this.talentService.add(talent);
+    public ResponseEntity<Result> add(@Valid @RequestBody Talent talent) {
+        var result = this.talentService.add(talent);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
     }
 }

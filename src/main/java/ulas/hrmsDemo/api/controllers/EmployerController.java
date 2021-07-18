@@ -73,8 +73,13 @@ public class EmployerController {
 
 
     @PutMapping("/uploadImage")
-    public Result saveImage(@RequestBody MultipartFile file, @RequestParam int empId) {
-        return this.employerService.saveImage(file, empId);
+    public ResponseEntity<Result> saveImage(@RequestBody MultipartFile file, @RequestParam int empId) {
+        var result = this.employerService.saveImage(file, empId);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
     }
 
 }

@@ -1,6 +1,8 @@
 package ulas.hrmsDemo.api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ulas.hrmsDemo.business.abstracts.EmployerService;
 import ulas.hrmsDemo.business.abstracts.SchoolGradeService;
@@ -25,18 +27,31 @@ public class SchoolGradeController {
     }
 
     @GetMapping("/getall")
-    public DataResult<List<SchoolGrade>> getAll(){
-        return this.schoolGradeService.getAll();
+    public ResponseEntity<DataResult<List<SchoolGrade>>> getAll(){
+        var result = this.schoolGradeService.getAll();
+        if (result.getData().size() == 0){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        }
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/add")
-    public Result add(@Valid @RequestBody SchoolGrade schoolGrade){
-        return this.schoolGradeService.add(schoolGrade);
-
+    public ResponseEntity<Result> add(@Valid @RequestBody SchoolGrade schoolGrade){
+        var result = this.schoolGradeService.add(schoolGrade);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
     }
 
     @PostMapping("/addMultiple")
-    public Result addMultiple(@RequestBody SchoolGrade[] schoolGrades){
-        return this.schoolGradeService.addMultiple(schoolGrades);
+    public ResponseEntity<Result> addMultiple(@RequestBody SchoolGrade[] schoolGrades){
+        var result = this.schoolGradeService.addMultiple(schoolGrades);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
     }
 }

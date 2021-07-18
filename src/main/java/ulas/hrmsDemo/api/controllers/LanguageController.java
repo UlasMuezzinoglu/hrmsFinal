@@ -1,5 +1,7 @@
 package ulas.hrmsDemo.api.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ulas.hrmsDemo.business.abstracts.LanguageService;
 import ulas.hrmsDemo.core.utilities.results.DataResult;
@@ -20,13 +22,22 @@ public class LanguageController {
         this.languageService = languageService;
     }
     @GetMapping("/getall")
-    public DataResult<List<Language>> getAll(){
-        return this.languageService.getAll();
+    public ResponseEntity<DataResult<List<Language>>> getAll(){
+        var result = this.languageService.getAll();
+        if (result.getData().size() == 0){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        }
+        return ResponseEntity.ok(result);
     }
 
 
     @PostMapping("/add")
-    public Result add(@Valid @RequestBody Language talent) {
-        return this.languageService.add(talent);
+    public ResponseEntity<Result> add(@Valid @RequestBody Language language) {
+        var result = this.languageService.add(language);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
     }
 }

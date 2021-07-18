@@ -51,8 +51,13 @@ public class CurriculumVitaeController {
     }
 
     @PutMapping("/uploadImage")
-    public Result saveImage(@RequestBody MultipartFile file, @RequestParam int cvId) {
-        return this.curriculumViateService.saveImage(file, cvId);
+    public ResponseEntity<Result> saveImage(@RequestBody MultipartFile file, @RequestParam int cvId) {
+        var result = this.curriculumViateService.saveImage(file, cvId);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
     }
 
     @GetMapping("/getByCandidateId")

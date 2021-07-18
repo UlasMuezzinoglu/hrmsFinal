@@ -1,6 +1,8 @@
 package ulas.hrmsDemo.api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ulas.hrmsDemo.business.abstracts.EduHistoryService;
 import ulas.hrmsDemo.business.concretes.EduHistoryManager;
@@ -24,13 +26,22 @@ public class EduHistoryController {
     }
 
     @GetMapping("/getall")
-    public DataResult<List<EduHistory>> getAll(){
-        return this.eduHistoryService.getAll();
+    public ResponseEntity<DataResult<List<EduHistory>>> getAll(){
+        var result = this.eduHistoryService.getAll();
+        if (result.getData().size() == 0){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        }
+        return ResponseEntity.ok(result);
     }
 
 
     @PostMapping("/add")
-    public Result add(@Valid @RequestBody EduHistory eduHistory) {
-        return this.eduHistoryService.add(eduHistory);
+    public ResponseEntity<Result> add(@Valid @RequestBody EduHistory eduHistory) {
+        var result = this.eduHistoryService.add(eduHistory);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
     }
 }
