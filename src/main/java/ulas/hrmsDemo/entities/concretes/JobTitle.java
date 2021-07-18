@@ -14,6 +14,16 @@ import java.util.List;
 
 public class JobTitle {
 
+    public JobTitle(){
+
+    }
+    public JobTitle(int id, String jobTitle){
+        this.id = id;
+        this.jobTitle = jobTitle;
+
+    }
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -31,14 +41,7 @@ public class JobTitle {
 
 
 
-    public JobTitle(){
 
-    }
-    public JobTitle(int id, String jobTitle){
-        this.id = id;
-        this.jobTitle = jobTitle;
-
-    }
 
     /*public int getId() {
         return id;

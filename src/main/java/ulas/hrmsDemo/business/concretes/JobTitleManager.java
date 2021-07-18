@@ -32,31 +32,22 @@ public class JobTitleManager implements JobTitleService {
     @Override
     public Result add(JobTitle jobTitle) {
 
-        /*if(isExistJobTitle(jobTitle.getJobTitle()) == true)
+        if(jobTitleDao.existsByJobTitle(jobTitle.getJobTitle()))
         {
             return new ErrorResult("Tekrar Eden Kayıt ! ");
-        }*/
+        }
         this.jobTitleDao.save(jobTitle);
         return new SuccessResult("Başarı ile Eklendi - JobTitle");
     }
 
-    public boolean isExistJobTitle(String  alan) {
+    /*public boolean isExistJobTitle(String  alan) {
         for (int i = 0; i < getAll().getData().size(); i++) {
             if (getAll().getData().get(i).getJobTitle() == alan){
                 return false;
             }
         }
         return true;
-    }
-
-    /*public void isExistJobTitle(String alan) {
-        for (int i = 0; i < getAll().getData().size(); i++) {
-            if (getAll().getData().get(i).getJobTitle() == alan) {
-
-            }
-
-        }
-
-
     }*/
+
+
 }

@@ -53,6 +53,8 @@ public class CurriculumViate {
     @Column(name = "is_active")
     private boolean isActive = true;
 
+    @Column(name = "cover_letter")
+    private String coverLetter;
 
 
 
@@ -71,5 +73,6 @@ public class CurriculumViate {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @OneToMany(mappedBy = "curriculumViate")
     private List<JobExperience> jobExperiences;
+
 
 }

@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ulas.hrmsDemo.business.abstracts.EmployeeService;
 import ulas.hrmsDemo.core.utilities.results.DataResult;
+import ulas.hrmsDemo.core.utilities.results.Result;
 import ulas.hrmsDemo.entities.concretes.Candicate;
 import ulas.hrmsDemo.entities.concretes.Employee;
 
@@ -31,7 +32,24 @@ public class EmployeeController {
          }
          return ResponseEntity.ok(result);
      }
-
+     @PutMapping("/confirmEmployer")
+    public ResponseEntity<Result> confirmEmployer(@RequestParam int employerId, @RequestParam boolean status){
+         var result = this.employeeService.confirmEmployer(employerId,status);
+         if (result.isSuccess()){
+             return ResponseEntity.ok(result);
+         }else {
+             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+         }
+     }
+    @PutMapping("/confirmJobAdvertisements")
+    public ResponseEntity<Result> confirmJobAdvertisements(@RequestParam int jobAdvertisementId, @RequestParam boolean status){
+        var result = this.employeeService.confirmJobAdvertisement(jobAdvertisementId,status);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
+    }
 
 
 }

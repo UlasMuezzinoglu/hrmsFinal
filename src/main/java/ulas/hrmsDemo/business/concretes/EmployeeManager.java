@@ -7,11 +7,13 @@ import ulas.hrmsDemo.business.abstracts.EmployeeService;
 import ulas.hrmsDemo.business.checkHelper.concretes.EmployeeCheckHelper;
 
 
-import ulas.hrmsDemo.core.utilities.results.DataResult;
-import ulas.hrmsDemo.core.utilities.results.SuccessDataResult;
+import ulas.hrmsDemo.core.utilities.results.*;
 import ulas.hrmsDemo.dataAccess.abstracts.EmployeeDao;
+import ulas.hrmsDemo.dataAccess.abstracts.EmployerDao;
+import ulas.hrmsDemo.dataAccess.abstracts.JobAdvertisementDao;
 import ulas.hrmsDemo.entities.concretes.Employee;
 import ulas.hrmsDemo.entities.concretes.Employer;
+import ulas.hrmsDemo.entities.concretes.JobAdvertisement;
 
 import java.util.List;
 
@@ -19,10 +21,14 @@ import java.util.List;
 public class EmployeeManager implements EmployeeService {
 
     private EmployeeDao employeeDao;
+    private EmployerDao employerDao;
+    private JobAdvertisementDao jobAdvertisementDao;
 
     @Autowired
-    public EmployeeManager(EmployeeDao employeeDao){
+    public EmployeeManager(EmployeeDao employeeDao,EmployerDao employerDao,JobAdvertisementDao jobAdvertisementDao){
         this.employeeDao = employeeDao;
+        this.employerDao = employerDao;
+        this.jobAdvertisementDao = jobAdvertisementDao;
     }
 
 
@@ -33,8 +39,36 @@ public class EmployeeManager implements EmployeeService {
     }
 
     @Override
-    public DataResult<Boolean> confirmEmployer(Employee staffUser, Employer confirmedEmployerUser) {
-        return new SuccessDataResult<>(EmployeeCheckHelper.isConfirmed(confirmedEmployerUser));
+    public Result confirmEmployer(int employerId, boolean status) {
+        try {
+            Employer employer;
+            employer = this.employerDao.getOne(employerId);
+            employer.setConfirmed(status);
+
+            this.employerDao.save(employer);
+            return new SuccessResult("İşlem Başarılı");
+
+        }catch (Exception e){
+            return new ErrorResult("İşlem Başarısız");
+
+        }
+
+    }
+
+    @Override
+    public Result confirmJobAdvertisement(int jobAdvertisementId, boolean status) {
+        try {
+            JobAdvertisement jobAdvertisement;
+            jobAdvertisement = this.jobAdvertisementDao.getOne(jobAdvertisementId);
+            jobAdvertisement.setConfirmed(status);
+
+            this.jobAdvertisementDao.save(jobAdvertisement);
+            return new SuccessResult("İşlem Başarılı");
+
+        }catch (Exception e){
+            return new ErrorResult("İşlem Başarısız");
+
+        }
     }
 
 

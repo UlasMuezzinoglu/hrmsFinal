@@ -33,6 +33,9 @@ public class Employer extends User {
     @Column(name = "sector")
     private String sector;
 
+    @Column(name = "is_confirmed")
+    private boolean isConfirmed;
+
     @JsonIgnore
     @OneToMany(mappedBy = "employer")
     private List<JobAdvertisement> jobAdvertisements;

@@ -25,7 +25,5 @@ public class City {
     @Column(name = "city_name")
     String cityName;
 
-    @OneToMany(mappedBy = "city")
-    @JsonIgnore
-    private List<JobAdvertisement> jobAdvertisements;
+
 }

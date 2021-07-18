@@ -52,6 +52,9 @@ public class JobAdvertisement {
     @Column(name = "full_description")
     private String fullDescription;
 
+    @Column(name = "is_confirmed")
+    private boolean isConfirmed;
+
 
 
     @ManyToOne()

@@ -38,7 +38,7 @@ public class EduHistory {
 
     @ManyToOne(targetEntity = SchoolGrade.class)
     @JoinColumn(name = "grade_id",referencedColumnName = "id",nullable = false)
-    private SchoolGrade gradeId;
+    private SchoolGrade grade;
 
     @Column(name = "faculty")
     @NotBlank(message = "Fakülte(Bölüm) Alanı Boş Geçilemez")
