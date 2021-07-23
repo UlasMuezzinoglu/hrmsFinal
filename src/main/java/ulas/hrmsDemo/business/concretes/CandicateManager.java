@@ -3,6 +3,7 @@ package ulas.hrmsDemo.business.concretes;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ulas.hrmsDemo.business.Constants.Messages;
 import ulas.hrmsDemo.business.abstracts.CandicateService;
 import ulas.hrmsDemo.business.abstracts.EmailService;
 import ulas.hrmsDemo.business.abstracts.VerifyCodeService;
@@ -30,6 +31,7 @@ public class CandicateManager implements CandicateService {
 
 
 
+
     @Autowired
     public CandicateManager(CandicateDao candicateDao, EmailService emailService, UserCheckService userCheckService,VerifyCodeService verifyCodeService, UserDao userDao){
 
@@ -45,7 +47,7 @@ public class CandicateManager implements CandicateService {
 
     @Override
     public DataResult<List<Candicate>> getAll() {
-        return new SuccessDataResult<>(this.candicateDao.findAll(),"Veriler Getirildi - Candidate");
+        return new SuccessDataResult<>(this.candicateDao.findAll(),Messages.DatasRetriviedForCandidate);
     }
 
 
@@ -61,22 +63,22 @@ public class CandicateManager implements CandicateService {
         boolean flag = false;
         if (!isChecked){
 
-          return new ErrorResult("Mernis Doğrulama Hatası Bilgilerinizi Doğru Girin !");
+          return new ErrorResult(Messages.MernisFailedAuth);
 
         }
         if (this.userDao.existsByEmail(candicate.getEmail())){
 
-            errorMsg = "Bu Mail Adresi ile İşleşen Zaten Bir Kayıt Var. | ";
+            errorMsg = Messages.MailIsExisting;
             flag = true;
 
         }
         if (this.candicateDao.existsByIdentityNumber(candicate.getIdentityNumber())){
 
-            errorMsg += "Bu T.C Kimlik Numarası ile İşleşen Zaten Bir Kayıt Var. |";
+            errorMsg += Messages.IdentityNumberIsExisting;
             flag = true;
         }
         if (!candicate.getPassword().equals(candicate.getPasswordAgain())) {
-            errorMsg += "Girdiğiniz Şifreler Birbirleri İle Uyuşmuyor.";
+            errorMsg += Messages.PasswordNotMatch;
             flag = true;
         }
         if (flag){
